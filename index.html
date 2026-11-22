@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tails in 20 Minutes: Private computing from a USB stick</title>
+<meta name="description" content="A step-by-step video course and e-book to set up Tails OS on a USB stick and use the internet and your crypto with far fewer traces.">
+<link rel="icon" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ====== EDIT HERE ====== */
+:root{
+  --bg:#000; --bg2:#070b14; --line:#1b2740;
+  --blue:#2d8cff; --blue-glow:#1f6dff; --ice:#9fd0ff;
+  --silver:#d9dee7; --steel:#8a93a3; --text:#c3cad6;
+  --steel-grad:linear-gradient(180deg,#fff 0%,#cfd5df 45%,#8d96a6 100%);
+}
+/* ======================= */
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font:400 17px/1.65 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+h1,h2,h3{font-family:Sora,Inter,sans-serif;line-height:1.12;letter-spacing:-.02em;color:#fff}
+h1,h2{background:var(--steel-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+h1{font-size:clamp(2.3rem,6.2vw,4.4rem);font-weight:800}
+h2{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;margin-bottom:.5em}
+h3{font-size:1.15rem;font-weight:600;margin-bottom:.3em}
+.wrap{width:min(1120px,92%);margin-inline:auto}
+section{padding:clamp(64px,10vw,120px) 0;position:relative}
+.lead{font-size:1.2rem;max-width:56ch}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.6em;padding:1em 1.8em;border-radius:10px;font:600 1.05rem Sora,sans-serif;text-decoration:none;color:#fff;background:linear-gradient(180deg,#4aa0ff,#1f6dff 60%,#1553d6);box-shadow:0 0 0 1px #7cb8ff55 inset,0 8px 40px -6px var(--blue-glow);transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 0 0 1px #9fd0ff88 inset,0 12px 54px -4px var(--blue-glow)}
+.btn.ghost{background:none;box-shadow:0 0 0 1px var(--steel) inset;color:var(--silver)}
+
+/* nav */
+nav{position:sticky;top:0;z-index:20;background:#000c;backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
+nav img{height:44px;width:44px;mix-blend-mode:screen}
+nav .btn{padding:.6em 1.2em;font-size:.95rem}
+
+/* hero */
+.hero{padding-top:clamp(40px,7vw,90px);overflow:hidden}
+.hero::before{content:"";position:absolute;inset:-10% -10% auto auto;width:70vw;height:70vw;max-width:900px;max-height:900px;background:radial-gradient(closest-side,#1f6dff40,transparent);pointer-events:none}
+.hero .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center;position:relative}
+.hero p.lead{margin:22px 0 32px}
+.cta-row{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.price-note{margin-top:18px;color:var(--steel);font-size:.95rem}
+.price-note b{color:var(--silver)}
+.emblem{position:relative;display:grid;place-items:center}
+.emblem img{width:min(430px,100%);mix-blend-mode:screen;animation:rise 1.4s cubic-bezier(.2,.7,.2,1) both,glow 5s 1.4s ease-in-out infinite}
+@keyframes rise{from{opacity:0;transform:translateY(30px) scale(.94);filter:blur(10px)}}
+@keyframes glow{50%{filter:drop-shadow(0 0 34px #2d8cff99)}}
+.proof{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:56px;padding-top:26px;border-top:1px solid var(--line);color:var(--steel);font-size:.95rem}
+.proof span::before{content:"✓";color:var(--blue);margin-right:.5em;font-weight:700}
+
+/* problem */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
+.problem{background:linear-gradient(var(--bg2),var(--bg))}
+.problem ul{list-style:none;padding:0;display:grid;gap:14px}
+.problem li{padding:18px 20px;border-left:2px solid var(--blue);background:#0a1222;border-radius:0 10px 10px 0}
+.problem li b{color:#fff;display:block}
+
+/* curriculum */
+.mod{display:grid;gap:0;margin-top:34px;border-top:1px solid var(--line)}
+.mod article{display:grid;grid-template-columns:200px 1fr;gap:24px;padding:26px 0;border-bottom:1px solid var(--line)}
+.mod article>b{font:600 1rem Sora;color:var(--ice)}
+.soon{margin-top:30px;padding:22px 26px;border:1px dashed var(--steel);border-radius:12px;color:var(--silver)}
+
+/* steps (real sequence) */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;counter-reset:s;margin-top:34px}
+.steps div{counter-increment:s;padding:28px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(160deg,#0c1628,#04070d)}
+.steps div::before{content:counter(s);display:grid;place-items:center;width:38px;height:38px;border-radius:50%;margin-bottom:16px;font:700 1rem Sora;color:#fff;background:var(--blue-glow);box-shadow:0 0 24px #1f6dffaa}
+
+/* offer */
+.offer .box{max-width:760px;margin:36px auto 0;padding:clamp(28px,5vw,52px);border-radius:20px;text-align:center;background:linear-gradient(160deg,#0e1a31,#04070d);box-shadow:0 0 0 1px #2d8cff55,0 0 90px -20px var(--blue-glow)}
+.price{font:800 clamp(3.4rem,9vw,5.4rem)/1 Sora;color:#fff;margin:6px 0}
+.price s{font-size:.38em;color:var(--steel);font-weight:500;margin-right:.3em}
+.box ul{list-style:none;padding:0;margin:24px auto 32px;display:grid;gap:10px;max-width:420px;text-align:left}
+.box li::before{content:"✓";color:var(--blue);margin-right:.7em;font-weight:700}
+.guarantee{margin-top:22px;color:var(--steel);font-size:.95rem}
+
+/* faq */
+.faq{max-width:780px;margin:30px auto 0}
+details{border-bottom:1px solid var(--line);padding:20px 4px}
+summary{cursor:pointer;font:600 1.1rem Sora;color:#fff;list-style:none;display:flex;justify-content:space-between;gap:20px}
+summary::after{content:"+";color:var(--blue);font-size:1.5rem;line-height:1;transition:transform .25s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{margin-top:12px}
+
+.final{text-align:center;background:radial-gradient(60% 80% at 50% 100%,#1f6dff33,transparent)}
+.final .lead{margin:0 auto 30px}
+footer{padding:36px 0 110px;border-top:1px solid var(--line);color:var(--steel);font-size:.88rem;text-align:center}
+footer p{max-width:70ch;margin:8px auto}
+
+/* sticky mobile buy bar */
+.bar{display:none;position:fixed;left:0;right:0;bottom:0;z-index:30;padding:12px 4%;background:#000d;backdrop-filter:blur(12px);border-top:1px solid var(--line)}
+.bar .btn{width:100%;padding:.9em}
+
+@media(max-width:860px){
+  .hero .wrap,.split{grid-template-columns:1fr}
+  .emblem{order:-1}.emblem img{width:min(260px,70%)}
+  .steps{grid-template-columns:1fr}
+  .mod article{grid-template-columns:1fr;gap:6px}
+  .bar{display:block}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <img src="assets/logo.png" alt="Brand logo">
+  <a class="btn buy" href="#">Get the course</a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div>
+    <h1>Your computer, without the trail.</h1>
+    <p class="lead">Learn to boot Tails OS from a USB stick in 20 minutes. Browse, work and manage your crypto from a clean system that forgets everything when you shut down.</p>
+    <div class="cta-row">
+      <a class="btn buy" href="#">Get instant access</a>
+      <a class="btn ghost" href="#inside">See what's inside</a>
+    </div>
+    <p class="price-note">Launch price <b>$24</b> <s>$44</s> · 7-day money-back guarantee</p>
+  </div>
+  <div class="emblem"><img src="assets/logo.png" alt="Shield emblem"></div>
+</div>
+<div class="wrap proof"><span>Video lessons + e-book</span><span>No technical background needed</span><span>Instant download</span><span>Works on most PCs</span></div>
+</header>
+
+<section class="problem"><div class="wrap split">
+  <div>
+    <h2>Your everyday system remembers everything.</h2>
+    <p class="lead">Browsers, apps and operating systems log what you do, where you are and what you own. That data gets sold, leaked and stolen.</p>
+  </div>
+  <ul>
+    <li><b>Leaked accounts and wallets</b>One infected laptop is enough to lose passwords and crypto.</li>
+    <li><b>Tracking by default</b>Ads, trackers and data brokers build a profile of you every day.</li>
+    <li><b>Hard-to-follow guides</b>Most tutorials assume you already know Linux. This one doesn't.</li>
+  </ul>
+</div></section>
+
+<section id="inside"><div class="wrap">
+  <h2>What you'll learn in Module 1</h2>
+  <p class="lead">Everything is shown on screen, click by click. Pause, repeat, follow along.</p>
+  <div class="mod">
+    <article><b>Understand Tails</b><div><h3>What it does and what it doesn't</h3><p>A plain explanation of how Tails works, why it leaves no trace on your computer, and its real limits.</p></div></article>
+    <article><b>Build your USB</b><div><h3>Download, verify, install</h3><p>Get Tails from the official source, verify it, and write it to a USB stick without mistakes.</p></div></article>
+    <article><b>Boot safely</b><div><h3>Start any PC from your stick</h3><p>Change the boot settings on Windows and Mac machines and reach the Tails desktop.</p></div></article>
+    <article><b>Daily use</b><div><h3>Browse, work and store files privately</h3><p>Use the Tor Browser, set up Persistent Storage, and build habits that keep you safe.</p></div></article>
+  </div>
+  <p class="soon"><b>Coming next: Module 2.</b> Sparrow Wallet and multi-sig, for managing Bitcoin with better security.</p>
+</div></section>
+
+<section class="problem"><div class="wrap">
+  <h2>From zero to a private setup</h2>
+  <div class="steps">
+    <div><h3>Get the course</h3><p>Pay once on Gumroad and download everything instantly.</p></div>
+    <div><h3>Follow the videos</h3><p>Install Tails on a USB stick in about 20 minutes.</p></div>
+    <div><h3>Use it for real</h3><p>Boot, browse and work with a clean system every time.</p></div>
+  </div>
+</div></section>
+
+<section class="offer" id="buy"><div class="wrap">
+  <h2 style="text-align:center">Everything you need, one payment</h2>
+  <div class="box">
+    <p>Launch price</p>
+    <div class="price"><s>$79</s>$50</div>
+    <ul>
+      <li>Step-by-step video lessons</li>
+      <li>Illustrated e-book (PDF)</li>
+      <li>Checklists to follow along</li>
+      <li>Lifetime access to Module 1</li>
+    </ul>
+    <a class="btn buy" href="#">Buy now on Gumroad</a>
+    <p class="guarantee">Secure checkout by Gumroad. Not happy within 7 days? Get a full refund.</p>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2 style="text-align:center">Questions</h2>
+  <div class="faq">
+    <details><summary>Do I need technical skills?</summary><p>No. If you can install an app and follow a video, you can do this.</p></details>
+    <details><summary>What do I need to start?</summary><p>A USB stick with at least 8 GB and a computer that can boot from USB.</p></details>
+    <details><summary>Does Tails make me completely anonymous?</summary><p>No tool does. Tails greatly reduces traces on your device and routes traffic through Tor. The course explains its limits and good habits.</p></details>
+    <details><summary>How do I receive the files?</summary><p>Right after paying, Gumroad gives you a download link and emails it to you.</p></details>
+    <details><summary>What if it isn't for me?</summary><p>Write to us within 7 days and we'll refund you.</p></details>
+  </div>
+</div></section>
+
+<section class="final"><div class="wrap">
+  <h2>Take control of your privacy today</h2>
+  <p class="lead">Set up Tails in 20 minutes and keep your data and your crypto away from prying eyes.</p>
+  <a class="btn buy" href="#">Get instant access</a>
+</div></section>
+
+<footer><div class="wrap">
+  <p>&copy; <span id="y"></span> Your Brand. All rights reserved.</p>
+  <p>For educational purposes. Use these tools lawfully. Results depend on how you apply what you learn.</p>
+</div></footer>
+
+<div class="bar"><a class="btn buy" href="#">Get the course · $50</a></div>
+
+<script>
+/* PUT YOUR GUMROAD PRODUCT LINK HERE */
+const GUMROAD_URL = "https://YOURNAME.gumroad.com/l/YOURPRODUCT";
+document.querySelectorAll("a.buy").forEach(a => a.href = GUMROAD_URL);
+document.getElementById("y").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
